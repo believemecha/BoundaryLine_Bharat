@@ -1,3 +1,4 @@
 {
-    "RECENT_MATCHES": "https://cricket-live-line1.p.rapidapi.com/match/5689/overHistory"
+    "RECENT_MATCHES": "https://cricket-live-line1.p.rapidapi.com/liveMatches",
+    "OVER_HISTORY": "https://cricket-live-line1.p.rapidapi.com/match/MATCH_ID/overHistory"
 }

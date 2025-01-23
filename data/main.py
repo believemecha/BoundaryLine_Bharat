@@ -1,8 +1,18 @@
 from ingestion.extraction import *
+from validation import validation_match
+from validation import validation_match
+
 import json
 
-data = fetchRecentMatches()
-with open('result.json', 'w') as outFile:
-    json.dump(data, outFile)
-print('Inside main')
-print(data, 'This is the data')
+# fetch over by over, eventually ball by ball details for each match
+
+responseData = fetchRecentMatches()
+## Logs and handling needs to be done here after validations
+
+#validation_match.MatchValidator.validateEntity(responseData)
+validation_match.MatchValidator().validateRecentMatchesStatus(responseData)
+validation_match.MatchValidator().validateRecentMatchesMessage(responseData)
+newMatchIds = validation_match.MatchValidator().validateRecentMatches(responseData)
+
+for matchId in newMatchIds:
+    pass

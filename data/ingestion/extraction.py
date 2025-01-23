@@ -1,10 +1,7 @@
 import requests
 import sys
-# from validation.validation_match import *
-# from validation.validation_player import *
 
 from utilities.ingestion_utilities import *
-
 
 def generateApiResponse(url, headers):
     config = CommonConfig()
@@ -14,7 +11,6 @@ def generateApiResponse(url, headers):
         if succesfulResponse(response):
             # Successful Api Response
             responseData = response.json()
-            print('This is response data', responseData)
             return responseData
         
         else:
@@ -26,6 +22,7 @@ def generateApiResponse(url, headers):
         # Log Exception
         print('Failure', e)
         sys.exit(FAILURE)
+
 
 def fetchRecentMatches():
     allApis = loadApiJsonFile()
