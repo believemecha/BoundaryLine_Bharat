@@ -7,10 +7,13 @@ class MatchValidator(Common):
         pass
 
     
+    def validateMatchCompletion(self, entity):
+        return  entity[MatchConfig.MATCH_STATUS] == CommonConfig.FINISHED
+        
+
     def validateRecentMatches(self, data):
         utility = Utility()
-        matchIds = utility.getMatchIds(data[CommonConfig.DATA])
-        print(matchIds)
+        matchIds = utility.getUnfinishedMatchIds(data[CommonConfig.DATA])
         filteredIds = utility.filterOutProcessedMatches(matchIds)
         return filteredIds
 

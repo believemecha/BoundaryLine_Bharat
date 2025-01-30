@@ -3,6 +3,7 @@ import os
 class CommonConfig:
     API_JSON_FILE = '/home/ramit/Desktop/Boundry Line/data/ingestion/Api.json'
     SUCCESS_STATUS = 200
+    TO_MANY_REQUESTS = 429
     SUCCESS, FAILURE = 0, 1
     ZERO_VALUE = 0
     MESSAGE = 'Message'
@@ -10,8 +11,9 @@ class CommonConfig:
     STATUS = 'status'
     DATA_FOUND = "data found."
     MSG = 'MSG'
+    MATCH_ID = 'MATCH_ID'
+    FINISHED = 'finished'
 
-    
 
 class Messages:
     SUCCESS = 'SUCCESS'
@@ -20,7 +22,9 @@ class Messages:
     NOT_FOUND = 'NOT_FOUND'
     CREATED = 'CREATED'
     OK = 'OK'
+    TO_MANY_REQUESTS = 'TO_MANY_REQUESTS'
 
+    
 
 class GetClientMEssage:
     pass
@@ -28,9 +32,15 @@ class GetClientMEssage:
 
 class MatchConfig:
     MATCH_ID = 'match_id'
+    MATCH_STATUS = 'match_status'
+
 
 class IngestionConfig:
     RECENT_MATCHES = 'RECENT_MATCHES'
+    OVER_HISTORY = 'OVER_HISTORY'
+
+class MatchColumns:
+    MATCH_ID = 'match_id'
 
 
 
@@ -40,6 +50,13 @@ class RequestHeaders:
     ACCEPT = ['Accept', 'application/json']
     CONTENT_TYPE = ['Content-Type', 'null']
     X_RAPIDAPI_UA = ['x-rapidapi-ua', 'RapidAPI-Playground']
-    X_RAPIDAPI_KEY = ['x-rapidapi-key', '313daaa998msh26aeaccc0d02b7bp1cebc6jsna45fbb6defef']
+    X_RAPIDAPI_KEY = ['x-rapidapi-key', '3f9f123a29msh2beaa37d0cddd46p1b57bejsn762407515581']
     X_RAPIDAPI_HOST = ['x-rapidapi-host', 'cricket-live-line1.p.rapidapi.com']
+    CONTENT_TYPE_APPLICATION_JSON = ['Content-Type', 'application/json']
 
+class Overs:
+    INNING_ONE = 1
+    INNING_TWO = 2
+
+class ApiKeys:
+    KEYS = ['313daaa998msh26aeaccc0d02b7bp1cebc6jsna45fbb6defef', '3f9f123a29msh2beaa37d0cddd46p1b57bejsn762407515581']

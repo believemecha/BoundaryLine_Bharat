@@ -1,18 +1,46 @@
+import json
 from ingestion.extraction import *
 from validation import validation_match
 from validation import validation_match
+from validation import validation_common
 
-import json
 
-# fetch over by over, eventually ball by ball details for each match
+
+def performMatchValidation(responseData):
+    validation_match.MatchValidator().validateRecentMatchesStatus(responseData) 
+    validation_match.MatchValidator().validateRecentMatchesMessage(responseData)
+    newMatchIds = validation_match.MatchValidator().validateRecentMatches(responseData)
+    return newMatchIds
+
+
+
+def getMatchOverDataById(newMatchIds):
+    matchOverDataById = {}
+    for matchId in newMatchIds[:1]:
+        matchOverResponsePacket = fetchMatchOverData(matchId)
+        validator = validation_common.Common()
+        validator.validateMessage(matchOverResponsePacket)
+        validator.validateStatus(matchOverResponsePacket)
+        matchOverData = validator.validateEntity(matchOverResponsePacket)
+        matchOverDataById[matchId] = matchOverData
+
+    return matchOverDataById
 
 responseData = fetchRecentMatches()
-## Logs and handling needs to be done here after validations
+newMatchIds = performMatchValidation(responseData)
+matchOverData = getMatchOverDataById(newMatchIds)
 
-#validation_match.MatchValidator.validateEntity(responseData)
-validation_match.MatchValidator().validateRecentMatchesStatus(responseData)
-validation_match.MatchValidator().validateRecentMatchesMessage(responseData)
-newMatchIds = validation_match.MatchValidator().validateRecentMatches(responseData)
 
-for matchId in newMatchIds:
-    pass
+
+
+
+
+
+
+
+
+
+    
+
+
+

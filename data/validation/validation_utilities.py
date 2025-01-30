@@ -1,13 +1,20 @@
 from config import *
 from storage.storage_operations import *
 class Utility:
-    def getMatchIds(self, entities):
+    def getUnfinishedMatchIds(self, entities):
         matchIds, match_id = [], MatchConfig.MATCH_ID
+
         for entity in entities:
             currentMatchId = entity[match_id]
+            if entity[MatchConfig.MATCH_STATUS].lower() != CommonConfig.FINISHED:
+                print(entity[MatchConfig.MATCH_STATUS])
+                continue
             matchIds.append(currentMatchId)
 
         return matchIds
+
+    def generateApiResponse(self, url, headers):
+        pass
         
 
 
