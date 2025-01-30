@@ -10,6 +10,8 @@ def loadApiJson(jsonFile):
     return fileData
 
 
+
+
 def loadApiJsonFile():
    # print(f"Current function name: {inspect.currentframe().f_code.co_name}")
     config = CommonConfig()
@@ -22,6 +24,28 @@ def getRecentMatchUrl(allApis):
     config = IngestionConfig()
     url = allApis[config.RECENT_MATCHES]
     return url
+
+def getOverDataUrl(allApis, matchId):
+    config = IngestionConfig()
+    url = allApis[config.OVER_HISTORY]
+    url = url.replace(CommonConfig.MATCH_ID, str(matchId))
+    
+    return url
+
+def getOverDataHeader():
+    config = RequestHeaders()
+    header, value = config.HEADER, config.VALUE
+
+    headers = {
+        config.ACCEPT[header]: config.ACCEPT[value],
+        config.CONTENT_TYPE_APPLICATION_JSON[header]: config.CONTENT_TYPE_APPLICATION_JSON[value],
+        config.X_RAPIDAPI_HOST[header]: config.X_RAPIDAPI_HOST[value],
+        config.X_RAPIDAPI_KEY[header]: config.X_RAPIDAPI_KEY[value],
+        config.X_RAPIDAPI_UA[header]: config.X_RAPIDAPI_UA[value]
+
+    }
+
+    return headers
 
 def getRecentMatchHeaders():
    # print(f"Current function name: {inspect.currentframe().f_code.co_name}")
