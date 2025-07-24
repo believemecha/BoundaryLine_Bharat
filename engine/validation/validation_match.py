@@ -9,6 +9,10 @@ class MatchValidator(Common):
     
     def validateMatchCompletion(self, entity):
         return  entity[MatchConfig.MATCH_STATUS] == CommonConfig.FINISHED
+    
+
+    def validateMatchDataPacket(self, data):
+        return MatchConfig.INNINGS1 in data and MatchConfig.INNINGS2 in data
         
 
     def validateRecentMatches(self, data):

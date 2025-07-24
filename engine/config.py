@@ -1,7 +1,8 @@
 import os
 
 class CommonConfig:
-    API_JSON_FILE = '/home/ramit/Desktop/Boundry Line/data/ingestion/Api.json'
+    API_JSON_FILE = '/Users/ramit/Desktop/BoundryLine/BoundaryLine/engine/ingestion/Api.json'
+    SAMPLE_FILE = '/Users/ramit/Desktop/BoundryLine/BoundaryLine/engine/matchOverDataSample.json'
     SUCCESS_STATUS = 200
     TO_MANY_REQUESTS = 429
     SUCCESS, FAILURE = 0, 1
@@ -13,6 +14,8 @@ class CommonConfig:
     MSG = 'MSG'
     MATCH_ID = 'MATCH_ID'
     FINISHED = 'finished'
+    STATUS = 'status'
+
 
 
 class Messages:
@@ -33,6 +36,19 @@ class GetClientMEssage:
 class MatchConfig:
     MATCH_ID = 'match_id'
     MATCH_STATUS = 'match_status'
+    INNINGS1 = '1 Inning'
+    INNINGS2 = '2 Inning'
+    TITLE = 'title'
+    WICKET = 'wicket'
+    OVERS = 'overs'
+    RUNS = 'runs'
+    WIDES = 'wides'
+    BALLS = 'balls'
+    DESCRIPTION = 'description'
+    NOBALLS = 'noballs'
+    LEGBYES = 'legbyes'
+    BYES = 'byes'
+    SEPERATOR = ' to '
 
 
 class IngestionConfig:
@@ -50,7 +66,7 @@ class RequestHeaders:
     ACCEPT = ['Accept', 'application/json']
     CONTENT_TYPE = ['Content-Type', 'null']
     X_RAPIDAPI_UA = ['x-rapidapi-ua', 'RapidAPI-Playground']
-    X_RAPIDAPI_KEY = ['x-rapidapi-key', '3f9f123a29msh2beaa37d0cddd46p1b57bejsn762407515581']
+    X_RAPIDAPI_KEY = ['x-rapidapi-key', '313daaa998msh26aeaccc0d02b7bp1cebc6jsna45fbb6defef']
     X_RAPIDAPI_HOST = ['x-rapidapi-host', 'cricket-live-line1.p.rapidapi.com']
     CONTENT_TYPE_APPLICATION_JSON = ['Content-Type', 'application/json']
 
