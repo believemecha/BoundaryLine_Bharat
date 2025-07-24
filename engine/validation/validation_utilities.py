@@ -7,7 +7,7 @@ class Utility:
         for entity in entities:
             currentMatchId = entity[match_id]
             if entity[MatchConfig.MATCH_STATUS].lower() != CommonConfig.FINISHED:
-                print(entity[MatchConfig.MATCH_STATUS])
+               # print(entity[MatchConfig.MATCH_STATUS])
                 continue
             matchIds.append(currentMatchId)
 
@@ -21,10 +21,13 @@ class Utility:
     def createResponsePacket(self, message, data):
         return {CommonConfig.MESSAGE: message, CommonConfig.DATA: data}
     
+    def createValidationResponsePacket(self, message, status):
+        return {CommonConfig.MESSAGE: message, CommonConfig.STATUS: status}
+    
     def filterOutProcessedMatches(self, matchIds):
         newMatches = []
         for id in matchIds:
-            print(id, '***')
+          #  print(id, '***')
             if id not in processedMatches:
                 newMatches.append(id)
 
