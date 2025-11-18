@@ -6,16 +6,11 @@ from validation import validation_common
 from transformation import transformation_matches
 
 
-
 def performMatchValidation(responseData):
-   #print(len(responseData), 'Inside of performMatchValidation')
     validation_match.MatchValidator().validateRecentMatchesStatus(responseData) 
-    validation_match.MatchValidator().validateRecentMatchesMessage(responseData)
-    
+    #validation_match.MatchValidator().validateRecentMatchesMessage(responseData)
     newMatchIds = validation_match.MatchValidator().validateRecentMatches(responseData)
-   # print(newMatchIds, 'Inside of performMatchValidation')
     return newMatchIds
-
 
 
 def getMatchOverDataById(newMatchIds):
@@ -39,7 +34,7 @@ def getMatchOverDataById(newMatchIds):
 
     return matchOverDataById
 
-def transformMatchData(matchOverDataById):
+def extractBatsmanVsBallerData(matchOverDataById):
     batsmanVsBowlerStats = {}
     transformer = transformation_matches.MatchTransformer()
     
@@ -49,42 +44,21 @@ def transformMatchData(matchOverDataById):
 
     return batsmanVsBowlerStats
 
-# responseData = fetchRecentMatches()
-# newMatchIds = performMatchValidation(responseData)
-# #newMatchIds = [6963]
-# matchOverData = getMatchOverDataById(newMatchIds)
-
-
-with open (CommonConfig.SAMPLE_FILE) as f:
-    matchOverData = json.load(f)[CommonConfig.DATA]
-
-matchOverData = {7339: matchOverData}
-batsmanVsBowlerStats = transformMatchData(matchOverData)
-print(batsmanVsBowlerStats)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+def updateDatabaseTables(matchStats):
+    updateBatsmanData()
+    updateBowlerData()
+    updateMatchData()
     
 
+responseData = fetchRecentMatches()
+newMatchIds = performMatchValidation(responseData)
+#newMatchIds = [6963]
+matchOverData = getMatchOverDataById(newMatchIds)
 
 
+# with open (CommonConfig.SAMPLE_FILE) as f:
+#     matchOverData = json.load(f)[CommonConfig.DATA]
+
+matchOverData = {7339: matchOverData}
+batsmanVsBowlerStats = extractBatsmanVsBallerData(matchOverData)
+# updateDatabaseTables(batsmanVsBowlerStats)

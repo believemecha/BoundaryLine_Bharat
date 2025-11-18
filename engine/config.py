@@ -15,6 +15,9 @@ class CommonConfig:
     MATCH_ID = 'MATCH_ID'
     FINISHED = 'finished'
     STATUS = 'status'
+    OK_MESSAGE = 'ok'
+
+    
 
 
 
@@ -49,7 +52,11 @@ class MatchConfig:
     LEGBYES = 'legbyes'
     BYES = 'byes'
     SEPERATOR = ' to '
-
+    FOURS = 'fours'
+    SIXES = 'sixes'
+    RUNS_CONCEDED = 'runs_conceded'
+    BALLS_BOWLED = 'balls_bowled'
+    WICKETS = 'wickets'
 
 class IngestionConfig:
     RECENT_MATCHES = 'RECENT_MATCHES'
@@ -66,8 +73,8 @@ class RequestHeaders:
     ACCEPT = ['Accept', 'application/json']
     CONTENT_TYPE = ['Content-Type', 'null']
     X_RAPIDAPI_UA = ['x-rapidapi-ua', 'RapidAPI-Playground']
-    X_RAPIDAPI_KEY = ['x-rapidapi-key', '313daaa998msh26aeaccc0d02b7bp1cebc6jsna45fbb6defef']
-    X_RAPIDAPI_HOST = ['x-rapidapi-host', 'cricket-live-line1.p.rapidapi.com']
+    X_RAPIDAPI_KEY = ['x-rapidapi-key', '588623603amsh4b6c13e11ab7b48p133b8djsne4c74a50af13']
+    X_RAPIDAPI_HOST = ['x-rapidapi-host', 'cricket-live-line-advance.p.rapidapi.com']
     CONTENT_TYPE_APPLICATION_JSON = ['Content-Type', 'application/json']
 
 class Overs:

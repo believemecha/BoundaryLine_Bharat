@@ -1,6 +1,5 @@
 import requests
 import sys
-
 from utilities.ingestion_utilities import *
 
 def generateApiResponse(url, headers):
