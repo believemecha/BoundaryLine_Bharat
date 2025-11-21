@@ -64,6 +64,18 @@ class BatsmanVsBowlerStatsTable(Base):
     sixes = Column(Integer)
     dismissals = Column(Integer)
 
+class BowlerVsBatsmanStatsTable(Base):
+    __tablename__ = 'bowler_vs_batsman'
+    id = Column(Integer, primary_key=True)
+    bowler_id = Column(Integer, ForeignKey('players.id'))
+    batsman_id = Column(Integer, ForeignKey('players.id'))
+    runs_conceded = Column(Integer)
+    balls_bowled = Column(Integer)
+    fours_conceded = Column(Integer)
+    sixes_conceded = Column(Integer)
+    wickets = Column(Integer)
+
+
 class FormatTable(Base):
     __tablename__ = 'formats'
     id = Column(Integer, primary_key=True)
@@ -89,6 +101,83 @@ class FormatwiseBatsmanStatsTable(Base):
     double_centuries = Column(Integer)
     triple_centuries = Column(Integer)
     four_hundreds = Column(Integer)
+
+class FormatWiseBowlerStatsTable(Base):
+    __tablename__ = 'formatwise_bowler_stats'
+    id = Column(Integer, primary_key=True)
+    format_id = Column(Integer, ForeignKey('formats.id'))
+    bowler_id = Column(Integer, ForeignKey('players.id'))
+    runs_conceded = Column(Integer)
+    wickets = Column(Integer)
+    balls_bowled = Column(Integer)
+    matches = Column(Integer)
+    innings = Column(Integer)
+    fours_conceded = Column(Integer)
+    sixes_conceded = Column(Integer)
+    strike_rate = Column(Float)
+    average = Column(Float)
+    five_wicket_hauls = Column(Integer)
+    ten_wicket_hauls = Column(Integer)
+
+class OpponentWiseBowlerStatsTable(Base):
+    __tablename__ = 'opponentwise_bowler_stats'
+    id = Column(Integer, primary_key=True)
+    opponent_id = Column(Integer, ForeignKey('players.id'))
+    bowler_id = Column(Integer, ForeignKey('players.id'))
+    runs_conceded_home = Column(Integer)
+    runs_conceded_away = Column(Integer)
+    runs_conceded_neutral = Column(Integer)
+    balls_bowled_home = Column(Integer)
+    balls_bowled_away = Column(Integer)
+    balls_bowled_neutral = Column(Integer)
+    matches_home = Column(Integer)
+    matches_away = Column(Integer)
+    matches_neutral = Column(Integer)
+    innings_home = Column(Integer)
+    innings_away = Column(Integer)
+    innings_neutral = Column(Integer)
+    strike_rate_home = Column(Float)
+    strike_rate_away = Column(Float)
+    strike_rate_neutral = Column(Float)
+    average_home = Column(Float)
+    average_away = Column(Float)
+    average_neutral = Column(Float)
+    five_wicket_hauls_home = Column(Integer)
+    five_wicket_hauls_away = Column(Integer)
+    five_wicket_hauls_neutral = Column(Integer)
+    ten_wicket_hauls_home = Column(Integer)
+    ten_wicket_hauls_away = Column(Integer)
+    ten_wicket_hauls_neutral = Column(Integer)
+
+class OpponenetTeamwiseBowlerStatsTable(Base):
+    __tablename__ = 'opponent_teamwise_bowler_stats'
+    id = Column(Integer, primary_key=True)
+    opponent_team_id = Column(Integer, ForeignKey('players.id'))
+    bowler_id = Column(Integer, ForeignKey('players.id'))
+    runs_conceded_home = Column(Integer)
+    runs_conceded_away = Column(Integer)
+    runs_conceded_neutral = Column(Integer)
+    balls_bowled_home = Column(Integer)
+    balls_bowled_away = Column(Integer)
+    balls_bowled_neutral = Column(Integer)
+    matches_home = Column(Integer)
+    matches_away = Column(Integer)
+    matches_neutral = Column(Integer)
+    innings_home = Column(Integer)
+    innings_away = Column(Integer)
+    innings_neutral = Column(Integer)
+    strike_rate_home = Column(Float)
+    strike_rate_away = Column(Float)
+    strike_rate_neutral = Column(Float)
+    average_home = Column(Float)
+    average_away = Column(Float)
+    average_neutral = Column(Float)
+    five_wicket_hauls_home = Column(Integer)
+    five_wicket_hauls_away = Column(Integer)
+    five_wicket_hauls_neutral = Column(Integer)
+    ten_wicket_hauls_home = Column(Integer)
+    ten_wicket_hauls_away = Column(Integer)
+    ten_wicket_hauls_neutral = Column(Integer)
 
 class OpponentwiseBatsmanStatsTable(Base):
     __tablename__ = 'opponentwise_batsman_stats'

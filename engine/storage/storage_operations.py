@@ -2,10 +2,16 @@ from .models import *
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 
-engine = create_engine("postgresql://bharat:yourpassword@69.164.242.182:5432/bharatdb")  # or your DB URL
+# engine = create_engine(
+#     "postgresql://bharat:yourpassword@69.164.242.182:5432/bharatdb",
+#     pool_size=10,
+#     max_overflow=5)  # or your DB URL
+engine = create_engine('sqlite:///cricket_stats.db')
 Session = sessionmaker(bind=engine)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 session = Session()
 Base.metadata.create_all(engine)
+
 class Player:
     def __init__(self, name, country, idAtSource=None):
         self.name = name
@@ -71,7 +77,7 @@ class Innings:
         return inning.id
 
 class BatsmanStats:
-    def __init__(self, playerId=None, totalRuns=0, ballsFaced=0, fours=0, sixes=0, strikeRate=0.0, average=0.0):
+    def __init__(self, playerId=None, session=session, totalRuns=0, ballsFaced=0, fours=0, sixes=0, strikeRate=0.0, average=0.0):
         self.playerId = playerId
         self.totalRuns = totalRuns
         self.ballsFaced = ballsFaced
@@ -79,6 +85,7 @@ class BatsmanStats:
         self.sixes = sixes
         self.strikeRate = strikeRate
         self.average = average
+        self.session = session
 
     def addBatsmanStats(self):
         batsmanStats = BatsmanStatsTable(
@@ -90,11 +97,11 @@ class BatsmanStats:
             strike_rate=self.strikeRate,
             average=self.average
         )
-        session.add(batsmanStats)
-        session.commit()
+        self.session.add(batsmanStats)
+        self.session.commit()
 
     def updateBatsmanStats(self, playerId, batsmanStats):
-        existingStats = session.query(BatsmanStatsTable).filter_by(player_id=playerId).first()
+        existingStats = self.session.query(BatsmanStatsTable).filter_by(player_id=playerId).first()
         if existingStats:
             existingStats.total_runs = batsmanStats['total_runs']
             existingStats.balls_faced = batsmanStats['balls_faced']
@@ -104,7 +111,7 @@ class BatsmanStats:
             existingStats.average = batsmanStats['average']
             existingStats.total_dismissals = batsmanStats['total_dismissals']
             existingStats.innings_played = batsmanStats['innings_played']
-            session.commit()
+            self.session.commit()
         else:
             newStats = BatsmanStatsTable(
                 player_id=playerId,
@@ -117,23 +124,23 @@ class BatsmanStats:
                 total_dismissals=batsmanStats['total_dismissals'],
                 innings_played=batsmanStats['innings_played']
             )
-            session.add(newStats)
-            session.commit()
+            self.session.add(newStats)
+            self.ession.commit()
 
     def getBatsmanStats(self, playerId):
-        batsmanStats = session.query(BatsmanStatsTable).filter_by(player_id=playerId).first()
+        batsmanStats = self.session.query(BatsmanStatsTable).filter_by(player_id=playerId).first()
         return batsmanStats
     
     def getAllBatsmanStats(self):
-        batsmanStatsList = session.query(BatsmanStatsTable).all()
+        batsmanStatsList = self.session.query(BatsmanStatsTable).all()
         result = {}
         for idx, batsmanStats in enumerate(batsmanStatsList):
-            player = session.query(PlayerTable).filter_by(id=batsmanStats.player_id).first()
+            player = self.session.query(PlayerTable).filter_by(id=batsmanStats.player_id).first()
             result[player.name] = batsmanStats
         return batsmanStatsList
     
     def getBatsmanStatsInFormat(self, formatId, batsmanId):
-        FormatwiseBatsmanStatsTableObj = session.query(FormatwiseBatsmanStatsTable).filter_by(format_id=formatId, batsman_id=batsmanId).first()
+        FormatwiseBatsmanStatsTableObj = self.session.query(FormatwiseBatsmanStatsTable).filter_by(format_id=formatId, batsman_id=batsmanId).first()
         return FormatwiseBatsmanStatsTableObj
 
     def updateBatsmanFormatStats(self, formatId, runs, balls, fours, sixes, outState):
@@ -154,7 +161,7 @@ class BatsmanStats:
             formatStats.double_centuries += 1 if runs >=200 else 0
             formatStats.triple_centuries += 1 if runs >=300 else 0
             formatStats.four_hundreds += 1 if runs >=400 else 0
-            session.commit()
+            self.session.commit()
         else:
             newFormatStats = FormatwiseBatsmanStatsTable(
                 format_id=formatId,
@@ -175,11 +182,11 @@ class BatsmanStats:
                 triple_centuries=1 if runs >=300 else 0,
                 four_hundreds=1 if runs >=400 else 0
             )
-            session.add(newFormatStats)
-            session.commit()
+            self.session.add(newFormatStats)
+            self.session.commit()
 
     def getFormatwiseStatsAllBatsman(self):
-        formatwiseStats = session.query(FormatwiseBatsmanStatsTable).all()
+        formatwiseStats = self.session.query(FormatwiseBatsmanStatsTable).all()
         return formatwiseStats
     
     
@@ -222,22 +229,23 @@ class BatsmanStats:
         self.updateBatsmanFormatStats(formatId, runs, balls, fours, sixes, outState)
 
 class BowlerStats:
-    def __init__(self, playerId=None):
+    def __init__(self, playerId=None, session=session):
         self.playerId = playerId
+        self.session = session
 
     def main(self, bowlingData, playerId, playerIdMapping, formatId):
         aggregateBowlingData = bowlingData['aggregate']
         runsConceded, ballsBowled, wickets = aggregateBowlingData['runsConceded'], \
                                              aggregateBowlingData['balls'], \
                                              aggregateBowlingData.get('wickets', 0)
-        existingStats = session.query(BowlerStatsTable).filter_by(player_id=playerId).first()
+        existingStats = self.session.query(BowlerStatsTable).filter_by(player_id=playerId).first()
         if existingStats:
             existingStats.runs_conceded += runsConceded
             existingStats.balls_bowled += ballsBowled
             existingStats.wickets += wickets
             existingStats.strike_rate = (existingStats.balls_bowled / existingStats.wickets) if existingStats.wickets > 0 else 0.0
             existingStats.average = (existingStats.runs_conceded / existingStats.wickets) if existingStats.wickets > 0 else 0.0
-            session.commit()
+            self.session.commit()
         else:
             strikeRate = (ballsBowled / wickets) if wickets > 0 else 0.0
             average = (runsConceded / wickets) if wickets > 0 else 0.0
@@ -249,50 +257,93 @@ class BowlerStats:
                 strike_rate=strikeRate,
                 average=average
             )
-            session.add(newStats)
-            session.commit()
+            self.session.add(newStats)
+            self.session.commit()
 
 
 class BatsmanVsBowlerStats:
-    def __init__(self, playerId=None):
-        self.batsmanId = playerId
+    def __init__(self, playerId=None, session=session):
+        # self.batsmanId = playerId
+        self.session = session
 
-    def updateBatsmanVsBowlerStats(self, battingInfo, playerIdMapping):
-        vsBowlersData = battingInfo.get('vsBowlers', {})
-        for bowlerName, bowlerStats in vsBowlersData.items():
-            bowlerId = playerIdMapping.get(bowlerName)
-            opponentBowlerWiseBatsmanStatsObj = OpponentBowlerWiseBatsmanStats(self.batsmanId, bowlerId)
-            runs, balls, fours, sixes, isDissmissed = bowlerStats.get('runsScored', 0), \
-                                                    bowlerStats.get('ballsFaced', 0), \
-                                                    bowlerStats.get('fours', 0), \
-                                                    bowlerStats.get('sixes', 0), \
-                                                    bowlerStats.get('out', False)
-            existingStats = session.query(BatsmanVsBowlerStatsTable).filter_by(batsman_id=self.batsmanId, bowler_id=bowlerId).first()
-            if existingStats:
-                existingStats.runs += runs
-                existingStats.balls += balls
-                existingStats.fours += fours
-                existingStats.sixes += sixes
-                existingStats.dismissals += 1 if isDissmissed else 0
-                session.commit()
-            else:
-                newStats = BatsmanVsBowlerStatsTable(
-                    batsman_id=self.batsmanId,
-                    bowler_id=bowlerId,
-                    runs=runs,
-                    balls=balls,
-                    fours=fours,
-                    sixes=sixes,
-                    dismissals=1 if isDissmissed else 0
-                )
-                session.add(newStats)
-                session.commit()
-            
-            opponentBowlerWiseBatsmanStatsObj = OpponentBowlerWiseBatsmanStats(self.batsmanId, bowlerId)
-            opponentBowlerWiseBatsmanStatsObj.updateBattingStats(bowlerStats)
+    def updateBatsmanVsBowlerStats(self, allBattingData, playerIdMapping):
+        toUpdate, toInsert = [], []
+        allBowlerStats = []
+        for batsmanName in allBattingData:
+            battingInfo = allBattingData[batsmanName]
+            vsBowlersData = battingInfo.get('vsBowlers', {})
+            for bowlerName, bowlerStats in vsBowlersData.items():
+                bowlerId = playerIdMapping.get(bowlerName)
+                batsmanId = playerIdMapping.get(batsmanName)
+                opponentBowlerWiseBatsmanStatsObj = OpponentBowlerWiseBatsmanStats(batsmanId, bowlerId)
+                runs, balls, fours, sixes, isDissmissed = bowlerStats.get('runsScored', 0), \
+                                                        bowlerStats.get('ballsFaced', 0), \
+                                                        bowlerStats.get('fours', 0), \
+                                                        bowlerStats.get('sixes', 0), \
+                                                        bowlerStats.get('out', False)
+                existingStats = session.query(BatsmanVsBowlerStatsTable).filter_by(batsman_id=batsmanId, bowler_id=bowlerId).first()
+                if existingStats:
+                    statsToUpdate = {
+                        "id": batsmanId,
+                        "bowler_id": bowlerId,
+                        "runs": existingStats.runs + runs,
+                        "balls": existingStats.balls + balls,
+                        "fours": existingStats.fours + fours,
+                        "sixes": existingStats.sixes + sixes,
+                        "dismissals": existingStats.dismissals + 1 if isDissmissed else 0
+                    }
+
+                    toUpdate.append(statsToUpdate)
+
+                    # existingStats.runs += runs
+                    # existingStats.balls += balls
+                    # existingStats.fours += fours
+                    # existingStats.sixes += sixes
+                    # existingStats.dismissals += 1 if isDissmissed else 0
+
+                    # session.commit()
+
+                else:
+                    statsToAdd = {
+                        "bowler_id": bowlerId,
+                        "runs": runs,
+                        "balls": balls,
+                        "fours": fours,
+                        "sixes": sixes,
+                        "dismissals": 1 if isDissmissed else 0
+                    }
+
+                    toInsert.append(statsToAdd)
+
+                    # newStats = BatsmanVsBowlerStatsTable(
+                    #     batsman_id=self.batsmanId,
+                    #     bowler_id=bowlerId,
+                    #     runs=runs,
+                    #     balls=balls,
+                    #     fours=fours,
+                    #     sixes=sixes,
+                    #     dismissals=1 if isDissmissed else 0
+                    # )
+
+                    # session.add(newStats)
+                    # session.commit()
+        # Bulk update
+        if toInsert:
+            session.bulk_insert_mappings(BatsmanVsBowlerStatsTable, toInsert)
+        if toUpdate:
+            session.bulk_update_mappings(BatsmanVsBowlerStatsTable, toUpdate)
+                # opponentBowlerWiseBatsmanStatsObj = OpponentBowlerWiseBatsmanStats(self.batsmanId, bowlerId)
+                # opponentBowlerWiseBatsmanStatsObj.updateBattingStats(bowlerStats)
     def getAllBatsmanVsBowlerStats(self):
         stats = session.query(BatsmanVsBowlerStatsTable).all()
         return stats
+
+class BowlerVsBatsmanStats:
+    def __init__(self):
+        pass
+
+    def updateBowlerVsBatsmanStats(self, bowlingInfo, playerIdMapping):
+        pass
 
 class Format:
     def addFormat(self, formatName):
