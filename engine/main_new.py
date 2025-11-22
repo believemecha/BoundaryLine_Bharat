@@ -7,11 +7,8 @@ from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
 
 
-
-
 # Configure logging
 logging.basicConfig(
-
     
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
@@ -22,7 +19,6 @@ logging.basicConfig(
 )
 
 INVALID = False
-
 
 def performValidations(matchJsonData):
     """
@@ -102,12 +98,15 @@ def performStorageOperations(matchJsonData):
 
     try:
         # ------------------------- PLAYER MAPPING -------------------------
-        def getPlayerIdMapping(playersInMatch, playersTeamA, playersTeamB, teamA, teamB):
+        def getPlayerIdMapping(peopleInMatch, playersTeamA, playersTeamB, teamA, teamB):
             mapping = {}
+            playersInMatch = playersTeamA + playersTeamB
             for player in playersInMatch:
-                sourceId = playersInMatch[player]
+                sourceId = peopleInMatch[player]
                 team = teamA if player in playersTeamA else teamB
                 playerObj = Player(player, team)
+                if player == 'DT Jukes':
+                    print("Debugging DT Jukes")
                 playerId = playerObj.ifPlayerExistsInDatabase()
                 if not playerId:
                     playerId = playerObj.addPlayer(player, team, sourceId)
@@ -115,12 +114,13 @@ def performStorageOperations(matchJsonData):
             logging.info("Player ID mapping completed.")
             return mapping
 
-        playersInMatch = matchJsonData['info']['matchInfo']['registry']['people']
+        # playersInMatch = matchJsonData['info']['matchInfo']['registry']['people']
+        peopleInMatch = matchJsonData['info']['matchInfo'].get('registry', {}).get('people', {})
         playersTeamWise = matchJsonData['info']['matchInfo']['players']
         teamA, teamB = list(playersTeamWise.keys())
 
         playerIdMapping = getPlayerIdMapping(
-            playersInMatch,
+            peopleInMatch,
             playersTeamWise[teamA],
             playersTeamWise[teamB],
             teamA,
@@ -191,8 +191,7 @@ def performStorageOperations(matchJsonData):
                 session = SessionLocal()
                 bvb = BatsmanVsBowlerStats(session=session)
 
-                bvb.updateBatsmanVsBowlerStats(battingData, playerIdMapping)
-
+                bvb.updateBatsmanVsBowlerStats(battingData, playerIdMapping, formatId)
 
                 session.commit()
                 session.close()
@@ -200,6 +199,7 @@ def performStorageOperations(matchJsonData):
                 logging.info("Batsman vs Bowler stats updated.")
             except Exception as e:
                 logging.error("Error in BVB stats: %s", e)
+
 
     except Exception as e:
         logging.error("Unexpected error in performStorageOperations:", e)

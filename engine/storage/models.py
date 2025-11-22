@@ -46,6 +46,7 @@ class BatsmanStatsTable(Base):
 class BowlerStatsTable(Base):
     __tablename__ = 'bowler_stats'
     id = Column(Integer, primary_key=True)
+    format_id = Column(Integer, ForeignKey('formats.id'))
     player_id = Column(Integer, ForeignKey('players.id'))
     runs_conceded = Column(Integer)
     wickets = Column(Integer)
@@ -56,6 +57,7 @@ class BowlerStatsTable(Base):
 class BatsmanVsBowlerStatsTable(Base):
     __tablename__ = 'batsman_vs_bowler'
     id = Column(Integer, primary_key=True)
+    format_id = Column(Integer, ForeignKey('formats.id'))
     batsman_id = Column(Integer, ForeignKey('players.id'))
     bowler_id = Column(Integer, ForeignKey('players.id'))
     runs = Column(Integer)
@@ -67,6 +69,7 @@ class BatsmanVsBowlerStatsTable(Base):
 class BowlerVsBatsmanStatsTable(Base):
     __tablename__ = 'bowler_vs_batsman'
     id = Column(Integer, primary_key=True)
+    format_id = Column(Integer, ForeignKey('formats.id'))
     bowler_id = Column(Integer, ForeignKey('players.id'))
     batsman_id = Column(Integer, ForeignKey('players.id'))
     runs_conceded = Column(Integer)
@@ -122,6 +125,7 @@ class FormatWiseBowlerStatsTable(Base):
 class OpponentWiseBowlerStatsTable(Base):
     __tablename__ = 'opponentwise_bowler_stats'
     id = Column(Integer, primary_key=True)
+    format_id = Column(Integer, ForeignKey('formats.id'))
     opponent_id = Column(Integer, ForeignKey('players.id'))
     bowler_id = Column(Integer, ForeignKey('players.id'))
     runs_conceded_home = Column(Integer)
@@ -152,6 +156,7 @@ class OpponentWiseBowlerStatsTable(Base):
 class OpponenetTeamwiseBowlerStatsTable(Base):
     __tablename__ = 'opponent_teamwise_bowler_stats'
     id = Column(Integer, primary_key=True)
+    format_id = Column(Integer, ForeignKey('formats.id'))
     opponent_team_id = Column(Integer, ForeignKey('players.id'))
     bowler_id = Column(Integer, ForeignKey('players.id'))
     runs_conceded_home = Column(Integer)
@@ -184,6 +189,7 @@ class OpponentwiseBatsmanStatsTable(Base):
     id = Column(Integer, primary_key=True)
     opponent_id = Column(Integer, ForeignKey('players.id'))
     batsman_id = Column(Integer, ForeignKey('players.id'))
+    format_id = Column(Integer, ForeignKey('formats.id'))
     runs_home = Column(Integer)
     runs_away = Column(Integer)
     runs_neutral = Column(Integer)
@@ -212,6 +218,7 @@ class OpponentwiseBatsmanStatsTable(Base):
 class OpponentBowlerwiseBatsmanStatsTable(Base):
     __tablename__ = 'opponent_bowlerwise_batsman_stats'
     id = Column(Integer, primary_key=True)
+    format_id = Column(Integer, ForeignKey('formats.id'))
     opponent_id = Column(Integer, ForeignKey('players.id'))
     bowler_id = Column(Integer, ForeignKey('players.id'))
     runs_home = Column(Integer)
@@ -235,6 +242,7 @@ class OpponentBowlerwiseBatsmanStatsTable(Base):
     sixes_away = Column(Integer)
     fours_neutral = Column(Integer)
     sixes_neutral = Column(Integer)
+
     
     
     

@@ -1,2 +1,5 @@
 engine/.DS_Store
 .DS_Store
+__pycache__/
+*.db
+*.log

@@ -251,6 +251,7 @@ class BowlerStats:
             average = (runsConceded / wickets) if wickets > 0 else 0.0
             newStats = BowlerStatsTable(
                 player_id=playerId,
+                format_id=formatId,
                 runs_conceded=runsConceded,
                 balls_bowled=ballsBowled,
                 wickets=wickets,
@@ -266,7 +267,7 @@ class BatsmanVsBowlerStats:
         # self.batsmanId = playerId
         self.session = session
 
-    def updateBatsmanVsBowlerStats(self, allBattingData, playerIdMapping):
+    def updateBatsmanVsBowlerStats(self, allBattingData, playerIdMapping, formatId):
         toUpdate, toInsert = [], []
         allBowlerStats = []
         for batsmanName in allBattingData:
@@ -275,17 +276,18 @@ class BatsmanVsBowlerStats:
             for bowlerName, bowlerStats in vsBowlersData.items():
                 bowlerId = playerIdMapping.get(bowlerName)
                 batsmanId = playerIdMapping.get(batsmanName)
-                opponentBowlerWiseBatsmanStatsObj = OpponentBowlerWiseBatsmanStats(batsmanId, bowlerId)
+                opponentBowlerWiseBatsmanStatsObj = OpponentBowlerWiseBatsmanStats(batsmanId, bowlerId, formatId)
                 runs, balls, fours, sixes, isDissmissed = bowlerStats.get('runsScored', 0), \
                                                         bowlerStats.get('ballsFaced', 0), \
                                                         bowlerStats.get('fours', 0), \
                                                         bowlerStats.get('sixes', 0), \
                                                         bowlerStats.get('out', False)
-                existingStats = session.query(BatsmanVsBowlerStatsTable).filter_by(batsman_id=batsmanId, bowler_id=bowlerId).first()
+                existingStats = session.query(BatsmanVsBowlerStatsTable).filter_by(batsman_id=batsmanId, bowler_id=bowlerId, format_id=formatId).first()
                 if existingStats:
                     statsToUpdate = {
                         "id": batsmanId,
                         "bowler_id": bowlerId,
+                        "format_id": formatId,
                         "runs": existingStats.runs + runs,
                         "balls": existingStats.balls + balls,
                         "fours": existingStats.fours + fours,
@@ -306,6 +308,7 @@ class BatsmanVsBowlerStats:
                 else:
                     statsToAdd = {
                         "bowler_id": bowlerId,
+                        "format_id": formatId,
                         "runs": runs,
                         "balls": balls,
                         "fours": fours,
@@ -363,9 +366,10 @@ class OpponentwiseBatsmanStats:
     pass
 
 class OpponentBowlerWiseBatsmanStats:
-    def __init__(self, batsmanId, bowlerId):
+    def __init__(self, batsmanId, bowlerId, formatId):
         self.batsmanId = batsmanId
         self.bowlerId = bowlerId
+        self.formatId = formatId
 
     def updateBattingStats(self, battingData):
         pass
