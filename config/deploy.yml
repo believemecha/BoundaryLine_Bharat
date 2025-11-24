@@ -22,6 +22,10 @@ proxy:
   hosts:
     - api.legslip.com
     - www.api.legslip.com
+  app_port: 3000
+  healthcheck:
+    path: /up               # MUST exist and return 200
+    timeout: 30
 # Credentials for your image host.
 registry:
   # Specify the registry server, if you're not using Docker Hub
