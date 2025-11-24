@@ -3,7 +3,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-DATABASE_URL = "postgresql://bharat:yourpassword@69.164.242.182:5432/bharatdb"
+DATABASE_URL = "postgresql://bharat:yourpassword@localhost/bharatdb"
 
 engine = create_engine(DATABASE_URL)  # NO connect_args here for PostgreSQL
 
