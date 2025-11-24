@@ -1,0 +1,19 @@
+# app/database.py
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, declarative_base
+
+DATABASE_URL = "postgresql://bharat:yourpassword@69.164.242.182:5432/bharatdb"
+
+engine = create_engine(DATABASE_URL)  # NO connect_args here for PostgreSQL
+
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+Base = declarative_base()
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

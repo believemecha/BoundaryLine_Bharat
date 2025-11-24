@@ -3,3 +3,12 @@ engine/.DS_Store
 __pycache__/
 *.db
 *.log
+app/__pycache__/
+app/database/__pycache__/
+app/controllers/__pycache__/
+app/models/__pycache__/
+app/presenters/__pycache__/
+app/presenters/players/__pycache__/
+app/presenters/batsman_stats/__pycache__/
+app/venv/
+venv/
