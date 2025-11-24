@@ -1,0 +1,2 @@
+web: gunicorn app.main:app -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:3000
+

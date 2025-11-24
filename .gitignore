@@ -12,3 +12,4 @@ app/presenters/players/__pycache__/
 app/presenters/batsman_stats/__pycache__/
 app/venv/
 venv/
+.kamal/secrets
