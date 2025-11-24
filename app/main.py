@@ -27,3 +27,7 @@ app.include_router(players_controller.router)
 @app.get("/")
 def get_players():
     return {"hey": "I am here!"}
+
+@app.get("/up")
+def health_check():
+    return {"status": "healthy"}
